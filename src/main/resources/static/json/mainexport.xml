@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<eExact xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eExact-Schema.xsd">
+<GLEntries>
+    <GLEntry entry="">
+        <Division code = "EXPORT_DIV"/>
+        <Description>EXPORT_DESC</Description>
+        <Date>EXPORT_DATE</Date>
+        <DocumentDate>EXPORT_DOC_DATE</DocumentDate>
+        <Journal code ="EXPORT_CODE" type="EXPORT_TYPE"></Journal>
+        EXPORT_ITERATE_STRING
+    </GLEntry>
+</GLEntries>
+</eExact>

@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>PSI Incontrol Phoenix</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">-->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/coreui-icons/css/coreui-icons.min.css}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/mdb/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/mdb/css/mdb.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/mdb/css/style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/simple-line-icons/css/simple-line-icons.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/coreui-master/dist/css/coreui.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/kendo/styles/kendo.common-bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/kendo/styles/kendo.bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/kendo/styles/kendo.dataviz.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/kendo/styles/kendo.dataviz.bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/axiosloading/css/nprogress.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/site.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/context-menu/css/contextMenu.css}">
+    <!-- jsTree CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendors/jsTree/dist/themes/default/style.css}">
+
+
+    <script th:src="@{~/vendors/jquery/jquery-3.4.1.js}"></script>
+    <script th:src="@{~/vendors/kendo/js/kendo.all.min.js}"></script>
+    <script th:src="@{/vendors/bootstrap-v4/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/vendors/pace/pace.min.js}"></script>
+    <script th:src="@{/vendors/perfect-scrollbar/dist/perfect-scrollbar.min.js}"></script>
+    <script th:src="@{/vendors/coreui-master/dist/js/coreui.min.js}"></script>
+    <script th:src="@{/vendors/vue/vue.js}"></script>
+    <script th:src="@{/vendors/axios/axios.min.js}"></script>
+    <script th:src="@{/vendors/axios/index.js}"></script>
+    <script th:src="@{/vendors/jsTree/dist/jstree.js}"></script>
+    <script th:src="@{/vendors/momentjs/moment.min.js}"></script>
+    <script th:src="@{/vendors/lodash/lodash.min.js}"></script>
+    <script th:src="@{/vendors/axios/axiosintercepter.js}"></script>
+    <script th:src="@{/js/psi.js}"></script>
+    <script th:src="@{/vendors/chitchat/sockjs.min.js}"></script>
+    <script th:src="@{/vendors/chitchat/stomp.min.js}"></script>
+    <script th:src="@{/vendors/context-menu/main.js}"></script>
+    <script th:src="@{/vendors/context-menu/contextMenu.js}"></script>
+    <script th:src="@{/vendors/mdb/js/jquery.js}"></script>
+    <script th:src="@{/vendors/mdb/js/popper.js}"></script>
+    <script th:src="@{/vendors/mdb/js/bootstrap.js}"></script>
+    <script th:src="@{/vendors/mdb/js/mdb.js}"></script>
+
+    <script>var ctx = "${pageContext.request.contextPath}"</script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show sidebar-minimized brand-minimized">
+<div id="root">
+    <header class="app-header navbar">
+        <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand navbar-toggler sidebar-toggler d-md-down-none" th:href="@{/}"
+           data-toggle="sidebar-lg-show">
+            <img class="navbar-brand-full logo" th:src="@{~/images/xmlmain.png}" width="30" height="30"
+                 alt="XML Tool">
+            <img class="navbar-brand-minimized logo" th:src="@{~/images/xmlmain.png}" width="30" height="30"
+                 alt="XML Tool">
+
+        </a>
+        <h3 class="text-left">XML2XML TOOL</h3>
+
+    </header>
+    <div class="app-body">
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav">
+                    <li class="nav-item mt-auto">
+                        <a class="nav-link nav-link-danger" href="/logout">
+                            <i class="nav-icon cui-account-logout"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+        </div>
+        <main class="main" layout:fragment="content">
+
+            <body>
+            <div class="container ml-5">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form
+                                id="app"
+                                action="#" th:action="@{/xmltoxml/navigate}"
+                                method="post"
+                        >
+                            <h3 class="-bold">XML2XML TOOL:</h3><br>
+                            <h5>Process :</h5><br>
+
+                            <img class="navbar-brand-full logo" th:src="@{~/images/xmltool.png}" width="100" height="50"
+                                 alt="Process">
+
+
+                            <h5>Steps:</h5><br>
+                            <ul style="font-size: 14px;">
+                                <li>
+                                    1.Upload Required Excel file From the Location
+                                </li>
+
+                                <li> 2.Click on the column button(It shows all the Excel Headers in Below Grid)</li>
+
+                                <li>3.Upload Required XML File from the Location</li>
+
+                                <li>4.Click on the column button(It shows all the XML Tags and Attributes in Below
+                                    Grid)
+                                </li>
+
+                                <li>5.Map the Excel header with XML (Tag or attribute)(It allows only one at a time)
+                                </li>
+
+                                <li>6.The selected mapping will display in Mapping Grid</li>
+
+                                <li>7.Reverify the Mapping data before Generate</li>
+
+                                <li>8.Finally Click on Generate button</li>
+
+                                <li>9.Your Required XML is ready (It downloads into browser window).</li>
+
+                                <li>10.Happy Using!!!</li>
+                                </li>
+                            </ul>
+                            <div>
+                                <p style="font-weight: bold;font-size: 16px;">
+                                    Note: We have Delete Icon (Red colour) to delete the Accidental mappings from
+                                    Mapping grid.
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" style="width:500px;" class="btn btn-primary"><i
+                                        class="fa fa-forward" aria-hidden="true"></i>Navigate
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            </body>
+
+        </main>
+    </div>
+    <footer class="app-footer">
+        <div>
+        </div>
+        <div class="ml-auto" style="color: grey">
+                   <span><i class="icon-globe">Site best viewed  in Google Chrome and Mozilla Firefox.</i>
+            </span>
+            <span>PSI Incontrol</span>
+        </div>
+    </footer>
+</div>
+<th:block layout:fragment="script">
+</th:block>
+
+</body>
+</html>

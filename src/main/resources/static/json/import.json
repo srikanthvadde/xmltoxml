@@ -1,0 +1,66 @@
+{
+"OH":
+[{"Headers":{ 
+"Account ID":"accountId", 
+"Account description":"accountDescription", 
+"Date":"transactionDateTime", 
+"Reference":"reference", 
+"Trans description":"transactionDescription", 
+"Debit amt":"debit", 
+"Credit amt":"credit", 
+"Balance":"balance", 
+"Job ID":"projectCode", 
+"Journal no.":"journalNumber", 
+"Cheque no.":"chequeNumber" 
+}
+},
+{"ENDPOINTS":{
+"get":"delete-import-data-by-month-year",
+"create":"create-finance-import",
+"getJson":"get-closed-pms-status"
+}} ],
+
+"EH":
+[{"Headers":{ 
+"Project Code & Name":"projectCode", 
+"400":"totalPerformance" 
+} 
+}
+,
+{
+"ENDPOINTS":{
+"get":"delete-import-data-by-month-year",
+"create":"create-engineering-import",
+"getJson":"get-closed-pms-status"
+}}],
+
+"GL":
+[{"Headers":{ 
+"Account ID":"accountId", 
+"Account description":"accountDescription", 
+"Date":"transactionDateTime", 
+"Reference":"reference", 
+"Trans description":"transactionDescription", 
+"Debit amt":"debit", 
+"Credit amt":"credit", 
+"Balance":"balance", 
+"Job ID":"projectCode", 
+"Journal no.":"journalNumber", 
+"Cheque no.":"chequeNumber" 
+}
+},
+{"ENDPOINTS":{
+"get":"delete-import-data-by-month-year",
+"create":"create-finance-import",
+"getJson":"get-closed-pms-status"
+}} ],
+
+  "IM":
+[{"Headers":{
+  "GL Account Code":"accountId",
+  "GL Account Description":"accountDescription",
+  "Phoenix description":"phoenixDescription",
+  "Phoenix Code":"phoenixCode"
+}
+}]
+}

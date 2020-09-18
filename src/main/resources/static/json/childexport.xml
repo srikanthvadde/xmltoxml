@@ -1,0 +1,36 @@
+<FinEntryLine number="EXPORT_NO" type="N" subtype="N">
+    <Date>EXPORT_DATE</Date>
+    <GLAccount code="EXPORT_GL_CODE"></GLAccount>
+    <Description>EXPORT_DESC</Description>
+    <Costcenter code="EXPORT_OPERATIVE_UNIT" />
+    <Costunit code="EXPORT_BUSINESS_UNIT" />
+    <Resource number="EXPORT_NO" />
+    <Item code="EXPORT_ITEM" />
+    <Asset code="EXPORT_ASSET" />
+    <Warehouse code="EXPORT_WAREHOUSE" />
+    <WarehouseLocation code="EXPORT_EH_LOCATION" />
+    <Project code="EXPORT_PROJECT_CODE" />
+    <Quantity>EXPORT_QUANTITY</Quantity>
+    <Amount>
+        <Currency code="EXPORT_CURRENCY"/>
+        <Debit>EXPORT_DEBT</Debit>
+        <Credit>EXPORT_CREDIT</Credit>
+        <VAT code="EXPORT_VAT" />
+    </Amount>
+    <FinReferences TransactionOrigin="EXPORT_TO">
+        <UniquePostingNumber>EXPORT_UPN</UniquePostingNumber>
+        <YourRef>Sales EXPORT_REF</YourRef>
+        <DocumentDate>EXPORT_DATE</DocumentDate>
+    </FinReferences>
+    <FreeFields>
+        <FreeTexts>
+            <FreeText number="1"></FreeText>
+            <FreeText number="2"></FreeText>
+            <FreeText number="3"></FreeText>
+        </FreeTexts>
+        <FreeNumbers>
+            <FreeNumber number="4">0</FreeNumber>
+            <FreeNumber number="5">0</FreeNumber>
+        </FreeNumbers>
+    </FreeFields>
+</FinEntryLine>

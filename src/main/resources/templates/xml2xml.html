@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{index}">
+
+<head>
+    <title></title>
+    <style>
+        .file-field.big-2 {
+            height: 3.7rem;
+        }
+
+        .file-field.big-5 {
+            height: 9.7rem;
+        }
+
+        .file-field.big-2 .file-path-wrapper {
+            height: 3.5rem;
+        }
+    </style>
+
+</head>
+<body>
+<main class="main" layout:fragment="content">
+
+    <div id="root">
+        <div class="container ml-2" style="max-width: 1850px;">
+            <div class="row border border-secondary">
+                <div class="col-sm-4">
+                    <form class="md-form" action="#">
+                        <div class="file-field big-2">
+                            <div class="btn btn-cyan btn-lg float-left">
+                                <span>Excel File</span>
+                                <input type="file" v-on:change="onFileChange($event)" accept=".xls,.xlsx">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" @click="loadExcelHeaders">Columns</button>
+                    </form>
+                    <div class="border border-secondary border-left-0" style="height: 650px;overflow-y: scroll;">
+                        <table id="excelTable">
+                            <template v-for="(item,index) in excelList">
+                                <tr>
+                                    <td :id="'item'+index">
+                                        <input type="checkbox" :id="'item'+index" @change="getCheckedVal(item)"/>
+                                        <label :for="'item'+index"
+                                               style="font-size: 16px;font-weight: bold;">{{item}}</label>
+                                    </td>
+                                </tr>
+
+                            </template>
+                        </table>
+                    </div>
+
+
+                </div>
+                <div class="col-sm-4">
+                    <form class="md-form" action="#">
+                        <div class="file-field big-2">
+                            <div class="btn btn-cyan btn-lg float-left">
+                                <span>XML File</span>
+                                <input type="file" v-on:change="onFileChangeXml($event)" accept=".xml">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" @click="loadXmlHeaders">Columns</button>
+                    </form>
+                    <div class="border border-secondary border-left-0" style="height: 650px;overflow-y: scroll;">
+                        <table id="xmlTable">
+                            <template v-for="(item,index) in xmlList">
+                                <tr>
+                                    <td :id="item.tagName+index">
+
+                                        <input type="checkbox" :id="item.tagName"
+                                               @change="getCheckedValXML(item,'','T',index)">
+                                        <label :for="item.tagName +index" style="font-size: 16px;font-weight: bold;">{{item.tagName}}</label>
+                                    </td>
+                                </tr>
+                                <template v-if="item.attributes!=null" v-for="(item3,index3) in item.attributes">
+                                    <tr>
+                                        <td :id="item.tagName +item3.attributeName">
+                                            <input type="checkbox" style="margin-left: 25px;"
+                                                   :id="item.tagName +item3.attributeName"
+                                                   @change="getCheckedValXML(item,item3,'A',index3)">
+                                            <label :for="item3.attributeName +index">{{item3.attributeName}}</label>
+                                        </td>
+                                    </tr>
+                                </template>
+
+                            </template>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-4 border-left-0">
+                    <div class="file-field big-5 text-center">
+                        <button type="button" class="btn btn-warning mt-5 w-50" @click="convertXmlCode">Generate
+                        </button>
+                    </div>
+                    <div class="border border-secondary border-left-0" style="height: 650px;overflow-y: scroll;">
+                        <table id="mainTable">
+                            <template v-if="mainMappedList.length>0" v-for="(mainitem,count) in mainMappedList">
+                                <tr>
+                                    <td :id="mainitem" style="font-size: 18px;font-weight: bold;">
+                                        <b>{{mainitem}}</b>
+                                        <i class="fa fa-remove text-danger" @click="selectableItem(mainitem)"></i>
+                                    </td>
+                                </tr>
+                            </template>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<th:block layout:fragment="script">
+    <script type="text/javascript" th:inline="javascript">
+        var imprtData = new Vue({
+            el: '#root',
+            data: {
+                excelFile: null,
+                xmlFile: null,
+                excelList: [],
+                xmlList: [],
+                slectedListExcel: [],
+                slectedListXml: [],
+                slectedListExcelBackend: [],
+                slectedListXmlBackend: [],
+                mainMappedList: [],
+                payload: null,
+                payloadMain: null,
+                mainMappedListBackend: [],
+                responseObject: {},
+                messages: []
+            },
+
+            watch: {},
+            methods: {
+                loadExcelHeaders() {
+                    let self = this;
+                    var config = {};
+                    config.headers = {};
+                    config.headers[document.querySelector('meta[name="_csrf_header"]').content] = document.querySelector('meta[name="_csrf"]').content;
+                    config.headers["'Content-Type': 'multipart/form-data'"];
+                    self.mainMappedListBackend = [];
+                    self.mainMappedList = [];
+                    var formData = new FormData();
+                    formData.append('file', self.excelFile);
+                    try {
+                        var excelHeaders = [];
+                        axios.post('/api/v1/xml2xml/fetch-excel-headers', formData, config).then(function (response) {
+                            response.data.listData.forEach(function (item) {
+                                excelHeaders.push(item.tagName);
+                            });
+                            self.excelList = excelHeaders;
+                            console.log(response.data);
+                            self.responseObject = response.data;
+                            console.log(self.excelList)
+                        })
+                    } catch (err) {
+                        console.error(err);
+                    }
+                },
+
+                loadXmlHeaders() {
+                    let self = this;
+                    var config = {};
+                    config.headers = {};
+                    config.headers[document.querySelector('meta[name="_csrf_header"]').content] = document.querySelector('meta[name="_csrf"]').content;
+                    config.headers["'Content-Type': 'multipart/form-data'"];
+                    self.mainMappedListBackend = [];
+                    self.mainMappedList = [];
+                    var formData = new FormData();
+                    formData.append('file', self.xmlFile);
+                    try {
+                        var xmlTags = [];
+                        axios.post('/api/v1/xml2xml/fetch-xml-headers', formData, config).then(function (response) {
+                            response.data.listData.forEach(function (item) {
+                                xmlTags.push(item);
+                            });
+                            self.xmlList = xmlTags;
+                            self.payload = response.data.payload;
+                            self.payloadMain = response.data.payloadMain;
+                            self.messages = response.data.messages;
+                            console.log(self.xmlList)
+
+                        })
+                    } catch (err) {
+                        console.error(err);
+                    }
+                },
+                onFileChange(e) {
+                    var files = e.target.files || e.dataTransfer.files;
+                    if (!files.length)
+                        return;
+                    this.excelFile = files[0];
+                    return this.excelFile;
+                },
+
+                onFileChangeXml(e) {
+                    var files = e.target.files || e.dataTransfer.files;
+                    if (!files.length)
+                        return;
+                    this.xmlFile = files[0];
+                    return this.xmlFile;
+                },
+
+
+                getCheckedVal(val) {
+                    this.slectedListExcel = [];
+                    var grid = document.getElementById("excelTable");
+                    var checkBoxes = grid.getElementsByTagName("INPUT");
+                    var message = "";
+
+                    for (i = 0; i < checkBoxes.length; i++) {
+                        var row = checkBoxes[i].parentNode.parentNode;
+                        if (row.cells[0].innerText.trim() != val.trim()) {
+                            console.log(row.cells[0].innerText + "get into")
+                            checkBoxes[i].checked = false;
+                        } else {
+                            message += row.cells[0].innerText.trim();
+                            this.slectedListExcel.push(message);
+                        }
+                    }
+
+
+                    if (this.slectedListExcel.length == 1 && this.slectedListXml.length == 1) {
+                        var message = this.slectedListExcel[0] + "<->" + this.slectedListXml[0];
+                        this.mainMappedList.push(message);
+                        this.emptyData();
+                    }
+
+                },
+
+                getCheckedValXML(val, val1, tagname, index) {
+                    this.slectedListXml = [];
+                    this.slectedListXmlBackend = [];
+                    var grid = document.getElementById("xmlTable");
+                    var checkBoxes = grid.getElementsByTagName("INPUT");
+                    var message = "";
+
+                    for (i = 0; i < checkBoxes.length; i++) {
+                        var row = checkBoxes[i].parentNode.parentNode;
+                        if (tagname == 'T') {
+                            if (row.cells[0].id.trim() != (val.tagName.trim() + index).trim()) {
+                                checkBoxes[i].checked = false;
+                            } else {
+                                message = row.cells[0].innerText.trim();
+                                this.slectedListXml.push(message);
+                                this.slectedListXmlBackend.push(val.tagValue)
+                            }
+                        }
+
+                        if (tagname == 'A') {
+                            if (row.cells[0].id.trim() != (val.tagName.trim() + val1.attributeName)) {
+                                checkBoxes[i].checked = false;
+                            } else {
+                                console.log(row.cells)
+                                message = row.cells[0].innerText.trim() + "(" + val.tagName.trim() + ")";
+                                this.slectedListXml.push(message);
+                                this.slectedListXmlBackend.push(val1.attributeVal)
+                            }
+                        }
+
+                    }
+
+                    if (this.slectedListExcel.length == 1 && this.slectedListXml.length == 1) {
+                        var message = this.slectedListExcel[0] + "<->" + this.slectedListXml[0];
+                        var messageBackend = this.slectedListExcel[0] + "<->" + this.slectedListXmlBackend[0];
+                        this.mainMappedList.push(message);
+                        this.mainMappedListBackend.push(messageBackend);
+                        this.emptyData();
+                    }
+                },
+
+                emptyData() {
+
+                    this.slectedListExcel = [];
+                    this.slectedListXml = [];
+                    var grid = document.getElementById("xmlTable");
+                    var checkBoxes = grid.getElementsByTagName("INPUT");
+
+                    var grid1 = document.getElementById("excelTable");
+                    var checkBoxes1 = grid1.getElementsByTagName("INPUT");
+
+                    for (i = 0; i < checkBoxes.length; i++) {
+                        checkBoxes[i].checked = false;
+                    }
+
+                    for (i = 0; i < checkBoxes1.length; i++) {
+                        checkBoxes1[i].checked = false;
+                    }
+
+
+                },
+
+                convertXmlCode() {
+                    let self = this;
+                    var config = {};
+                    config.headers = {};
+                    config.headers[document.querySelector('meta[name="_csrf_header"]').content] = document.querySelector('meta[name="_csrf"]').content;
+                    this.responseObject.payload = self.payload;
+                    this.responseObject.payloadMain = self.payloadMain;
+                    this.responseObject.messages = self.messages;
+                    let mainData = {
+                        "mainList": this.mainMappedListBackend,
+                        "completeObj": this.responseObject
+                    }
+
+                    axios.post('/api/v1/xml2xml/convert-into-xml-file', mainData, config).then(function (response) {
+                        console.log(response);
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'export_data_.xml');
+                        document.body.appendChild(link);
+                        link.click();
+                    });
+                },
+
+                selectableItem(item) {
+                    this.mainMappedList = this.mainMappedList.filter(itemMain = > itemMain !== item
+                )
+                    ;
+                }
+            },
+            mounted() {
+
+            }
+        });
+    </script>
+</th:block>
+
+</body>
+</html>
